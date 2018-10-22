@@ -12,8 +12,15 @@ class App extends Component {
 }
 
   state = {
+    locations: [
+      {name:'Lagos', lat: 6.5244, lng: 3.3792},
+      {name:'Surulere', lat: 6.4926, lng: 3.3490},
+      {name:'Ajeromi-Ifelodun', lat: 6.4555, lng: 3.3339},
+      {name:'Agege', lat: 6.6154, lng: 3.3238},
+      {name:'Mushin', lat: 6.5352, lng: 3.3490}
+    ],
     menuClicked: false,
-    navWidth: "0"
+    navWidth: "200px"
   }
 
   showSearchBar(){
@@ -37,8 +44,8 @@ class App extends Component {
             <header className="app-header"> 
             <span className="hamburger-icon" onClick={this.showSearchBar}>&#9776;</span>  
             </header>
-        <Search clicked={this.state.menuClicked} width={this.state.navWidth} closeSearch={this.closeSearchBar}/>
-        <Map />
+        <Search clicked={this.state.menuClicked} width={this.state.navWidth} closeSearch={this.closeSearchBar} locations={this.state.locations}/>
+        <Map locations={this.state.locations}/>
        </div> 
       </div>
     );
