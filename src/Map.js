@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+let markers = [];
+let map;
 
 //Code to load map, referenced from - https://stackoverflow.com/questions/48493960/using-google-map-in-react-component
 class Map extends Component{
@@ -7,10 +9,11 @@ class Map extends Component{
 
         this.getGoogleMap = this.getGoogleMap.bind(this);
         this.loadGoogleMap = this.loadGoogleMap.bind(this);
+        this.loadGoogleMarkers = this.loadGoogleMarkers.bind(this);
         this.addInfoWindow = this.addInfoWindow.bind(this);
         this.loadMarkerSnippet = this.loadMarkerSnippet.bind(this);
     }
-
+     
     state = {
         mapIsReady: false, //is set to true after google map script is loaded
         markerSnippets: []
@@ -36,27 +39,28 @@ class Map extends Component{
 
     //Initialize and load the map
     loadGoogleMap(){
-      let length = this.props.locations.length;
       let locations = this.props.locations;
 
       //Add the map using a centered location
-      const map = new window.google.maps.Map(document.getElementById('map'), {
+          map = new window.google.maps.Map(document.getElementById('map'), {
           zoom: 9,
           center: new window.google.maps.LatLng(locations[0].lat, locations[0].lng)
         });
+  }
 
-      //Add 5 markers on map
-      let markers = [];
+//Add 5 markers on map
+  loadGoogleMarkers(locations) {
+    let length = locations.length;
+
       for (let i = 0; i < length; i++) {  
+        let marker = new window.google.maps.Marker({ 
+              position: new window.google.maps.LatLng(locations[i].lat, locations[i].lng),
+              map: map,
+     });console.log('m',marker.position.lat());
+     this.addInfoWindow(map, marker, this.state.markerSnippets);
 
-         let marker = new window.google.maps.Marker({ 
-               position: new window.google.maps.LatLng(locations[i].lat, locations[i].lng),
-               map: map,
-      });console.log('m',marker.position.lat());
-      this.addInfoWindow(map, marker, this.state.markerSnippets);
-
-      markers.push(marker);
-    }
+     markers.push(marker);
+   }
   }
 
   //Add infowindow and animate map markers
@@ -66,7 +70,7 @@ class Map extends Component{
     markerSnippets.forEach((item) => { 
     if(marker.position.lat() === item.locationlat){
       infoWindow = new window.google.maps.InfoWindow({
-      content: item.venueName
+      content: "<div> <strong> Venue: </strong>" + item.venueName + "</div>"
   });
  }
 });
@@ -119,13 +123,14 @@ class Map extends Component{
       (error) => { console.log("could not get venue for location")});
     }
 
-    componentDidUpdate() {
+    componentDidUpdate() {console.log("update");
         if (this.state.mapIsReady) {
             this.loadGoogleMap();
+            this.loadGoogleMarkers(this.props.updatedLocations);
           }
     }
     
-      render() {
+      render() { console.log("prop", this.props.updatedLocations)
         return (
             <div id="map" style={{position:'relative', overflow:'visible'}}></div>
         )
