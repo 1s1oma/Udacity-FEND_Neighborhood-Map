@@ -49,7 +49,7 @@ class Search extends Component{
                 <button className="closebtn" onClick={this.props.closeSearch}>&times;</button>
                 <input type="text" placeholder="Search by location name"  value={this.state.query}
                 onChange={(event) => this.updateQuery(event.target.value)}/>
-                <LocationList searchedLocations={this.state.searchedLocations}/>
+                <LocationList searchedLocations={this.state.searchedLocations} passclickedLocationToMap={this.props.passclickedLocationToMap}/>
                 </div>
             </div>
         );

@@ -7,7 +7,7 @@ class LocationList extends Component{
             <div>
                 <ol className="location-list">
                 {mapLocations.map((location) => (
-                    <li key={location.name}>
+                    <li key={location.name} onClick={() => this.props.passclickedLocationToMap(location)}>
                         {location.name}
                     </li>
                 ))}

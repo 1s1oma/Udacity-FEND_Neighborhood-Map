@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 let markers = [];
 let map;
+let infoWindows = [];
 
 //Code to load map, referenced from - https://stackoverflow.com/questions/48493960/using-google-map-in-react-component
 class Map extends Component{
@@ -9,13 +10,16 @@ class Map extends Component{
 
         this.getGoogleMap = this.getGoogleMap.bind(this);
         this.loadGoogleMap = this.loadGoogleMap.bind(this);
+        this.deteleGoogleMarkers = this.deteleGoogleMarkers.bind(this);
         this.loadGoogleMarkers = this.loadGoogleMarkers.bind(this);
+        this.animateClickedMarker = this.animateClickedMarker.bind(this);
         this.addInfoWindow = this.addInfoWindow.bind(this);
         this.loadMarkerSnippet = this.loadMarkerSnippet.bind(this);
     }
      
     state = {
         mapIsReady: false, //is set to true after google map script is loaded
+        markersReady: false,
         markerSnippets: []
       };
 
@@ -47,6 +51,15 @@ class Map extends Component{
           center: new window.google.maps.LatLng(locations[0].lat, locations[0].lng)
         });
   }
+//delete previous markers
+deteleGoogleMarkers(){
+  if(markers.length > 0){
+    for (let i = 0; i < markers.length; i++) {
+      markers[i].setMap(null);
+    }
+    markers = [];
+  }
+}
 
 //Add 5 markers on map
   loadGoogleMarkers(locations) {
@@ -58,10 +71,9 @@ class Map extends Component{
               map: map,
      });console.log('m',marker.position.lat());
      this.addInfoWindow(map, marker, this.state.markerSnippets);
-
      markers.push(marker);
-   }
-  }
+   }console.log("len", markers.length, this.state.markersReady)
+}
 
   //Add infowindow and animate map markers
   addInfoWindow(map, marker, markerSnippets){
@@ -72,6 +84,7 @@ class Map extends Component{
       infoWindow = new window.google.maps.InfoWindow({
       content: "<div> <strong> Venue: </strong>" + item.venueName + "</div>"
   });
+    infoWindows.push(infoWindow);
  }
 });
 
@@ -82,6 +95,20 @@ class Map extends Component{
         marker.setAnimation(null);
     }, 700); 
   });
+}
+
+//Bounce marker when the corresponding list location is clicked
+  animateClickedMarker(clickedLocation){console.log("info",infoWindows)
+    for(let i=0; i < markers.length; i++){
+      if(markers[i].position.lat() === clickedLocation.lat){console.log("bounce", markers.length,markers[i].position.lat(),clickedLocation.lat)
+        markers[i].setAnimation(window.google.maps.Animation.BOUNCE);
+        console.log("infol",i,infoWindows[i])
+        infoWindows[i].open(map, markers[i]);
+        setTimeout(function () {
+        markers[i].setAnimation(null);
+        }, 700);
+    }
+  }
 }
 
 //call wikipedia api to fetch marker information
@@ -126,8 +153,10 @@ class Map extends Component{
     componentDidUpdate() {console.log("update");
         if (this.state.mapIsReady) {
             this.loadGoogleMap();
+            this.deteleGoogleMarkers();
             this.loadGoogleMarkers(this.props.updatedLocations);
           }
+            this.animateClickedMarker(this.props.clickedLocation);
     }
     
       render() { console.log("prop", this.props.updatedLocations)

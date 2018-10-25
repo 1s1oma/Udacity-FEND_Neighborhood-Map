@@ -10,6 +10,7 @@ class App extends Component {
     this.showSearchBar = this.showSearchBar.bind(this);
     this.closeSearchBar = this.closeSearchBar.bind(this);
     this.passUpdateLocationsToMap = this.passUpdateLocationsToMap.bind(this);
+    this.passclickedLocationToMap = this.passclickedLocationToMap.bind(this);
 }
 
   state = {
@@ -27,6 +28,7 @@ class App extends Component {
       {name:'Agege', lat: 6.6154, lng: 3.3238},
       {name:'Mushin', lat: 6.5352, lng: 3.3490}
     ],
+    clickedLocation: "",
     menuClicked: false,
     navWidth: "200px"
   }
@@ -52,6 +54,13 @@ class App extends Component {
     }) 
   }
 
+   //This function will be called when a list locations is clicked inorder to animate the marker
+   passclickedLocationToMap(clickedLocation){console.log("clicked", clickedLocation);
+   this.setState({
+    clickedLocation: clickedLocation
+   }) 
+ }
+
   render() {
     {console.log("rends")}
     return (
@@ -60,8 +69,8 @@ class App extends Component {
             <header className="app-header"> 
             <span className="hamburger-icon" onClick={this.showSearchBar}>&#9776;</span>  
             </header>
-        <Search clicked={this.state.menuClicked} width={this.state.navWidth} closeSearch={this.closeSearchBar} locations={this.state.locations} passUpdateLocationsToMap={this.passUpdateLocationsToMap}/>
-        <Map locations={this.state.locations} updatedLocations={this.state.updatedLocations}/>
+        <Search clicked={this.state.menuClicked} width={this.state.navWidth} closeSearch={this.closeSearchBar} locations={this.state.locations} passUpdateLocationsToMap={this.passUpdateLocationsToMap} passclickedLocationToMap={this.passclickedLocationToMap}/>
+        <Map locations={this.state.locations} updatedLocations={this.state.updatedLocations} clickedLocation={this.state.clickedLocation}/>
        </div> 
       </div>
     );
