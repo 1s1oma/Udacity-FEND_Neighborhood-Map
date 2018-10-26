@@ -5,9 +5,9 @@ class LocationList extends Component{
         const mapLocations = this.props.searchedLocations ? this.props.searchedLocations: []; 
         return(
             <div>
-                <ol className="location-list">
+                <ol className="location-list" role="listbox">
                 {mapLocations.map((location) => (
-                    <li key={location.name} onClick={() => this.props.passclickedLocationToMap(location)}>
+                    <li key={location.name} onClick={() => this.props.passclickedLocationToMap(location)} role="Menuitem">
                         {location.name}
                     </li>
                 ))}

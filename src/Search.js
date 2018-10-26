@@ -20,9 +20,9 @@ class Search extends Component{
           ]
       }
     
-    updateQuery = (query) => {console.log('updatequery');
+    updateQuery = (query) => {
     let searchedLocations = [];
-    searchedLocations = this.updateLocationList(query);console.log('loc', searchedLocations);
+    searchedLocations = this.updateLocationList(query);
         this.setState({ 
             query: query.trim(),
             searchedLocations: searchedLocations
@@ -31,7 +31,7 @@ class Search extends Component{
     }
     
     //update the location based on the query
-    updateLocationList = (query) => {console.log('updatelist', query);
+    updateLocationList = (query) => {
         let matchedLocations = [];
         let locations = this.props.locations;
         
@@ -44,7 +44,7 @@ class Search extends Component{
     render(){ 
         return(
             <div>
-                <div className="side-nav" style={{width: this.props.width}}>{console.log('pa',this.state.searchedLocations)}
+                <div className="side-nav" style={{width: this.props.width}}>
                 <h5>Locations in Lagos, Nigeria</h5>
                 <button className="closebtn" onClick={this.props.closeSearch}>&times;</button>
                 <input type="text" placeholder="Search by location name"  value={this.state.query}

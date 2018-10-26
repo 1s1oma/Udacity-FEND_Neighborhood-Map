@@ -30,7 +30,7 @@ class App extends Component {
     ],
     clickedLocation: "",
     menuClicked: false,
-    navWidth: "200px"
+    navWidth: "0"
   }
 
   showSearchBar(){
@@ -48,21 +48,20 @@ class App extends Component {
   }
 
   //This function will be called when the list locations is updated via search to update the maps
-  passUpdateLocationsToMap(updatedListLocations){console.log("passed", updatedListLocations)
+  passUpdateLocationsToMap(updatedListLocations){
     this.setState({
       updatedLocations: updatedListLocations
     }) 
   }
 
    //This function will be called when a list locations is clicked inorder to animate the marker
-   passclickedLocationToMap(clickedLocation){console.log("clicked", clickedLocation);
+   passclickedLocationToMap(clickedLocation){
    this.setState({
     clickedLocation: clickedLocation
    }) 
  }
 
   render() {
-    {console.log("rends")}
     return (
       <div>
         <div className="app-container">

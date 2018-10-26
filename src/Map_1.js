@@ -50,7 +50,9 @@ class Map extends Component{
           zoom: 9,
           center: new window.google.maps.LatLng(locations[0].lat, locations[0].lng)
         });
+        return true;
   }
+
 //delete previous markers
 deteleGoogleMarkers(){
   if(markers.length > 0){
@@ -76,37 +78,59 @@ deteleGoogleMarkers(){
 }
 
   //Add infowindow and animate map markers
-  addInfoWindow(map, marker, markerSnippets){
+/*  addInfoWindow(map, marker, markerSnippets){
     let infoWindow;
 
     markerSnippets.forEach((item) => { 
     if(marker.position.lat() === item.locationlat){
       infoWindow = new window.google.maps.InfoWindow({
       content: "<div> <strong> Venue: </strong>" + item.venueName + "</div>"
-  });
+  });console.log('b', infoWindow);
     infoWindows.push(infoWindow);
  }
 });
-
+console.log('b2', infoWindow);
   window.google.maps.event.addListener(marker, 'click', function () {
-      marker.setAnimation(window.google.maps.Animation.BOUNCE);
+      marker.setAnimation(window.google.maps.Animation.BOUNCE);console.log('a', infoWindow);
       infoWindow.open(map, marker);
       setTimeout(function () {
         marker.setAnimation(null);
     }, 700); 
   });
+}*/
+
+//Add infowindow and animate map markers
+addInfoWindow(map, marker, markerSnippets){
+  let infoWindow;
+  markerSnippets.forEach((item) => { 
+  if(marker.position.lat() === item.locationlat){
+    infoWindow = new window.google.maps.InfoWindow({
+    content: "<div> <strong> Venue: </strong>" + item.venueName + "</div>"
+  });
+  }
+});
+
+window.google.maps.event.addListener(marker, 'click', function () {console.log('a', infoWindow)
+    marker.setAnimation(window.google.maps.Animation.BOUNCE);
+    infoWindow.open(map, marker);
+    setTimeout(function () {
+    marker.setAnimation(null);
+  }, 700); 
+});
 }
+
 
 //Bounce marker when the corresponding list location is clicked
   animateClickedMarker(clickedLocation){
     for(let i=0; i < markers.length; i++){
       if(markers[i].position.lat() === clickedLocation.lat){
         markers[i].setAnimation(window.google.maps.Animation.BOUNCE);
-        
         infoWindows[i].open(map, markers[i]);
-        setTimeout(function () {
-        markers[i].setAnimation(null);
-        }, 700);
+        if(markers[i] !== undefined){ console.log("ma", markers[i]);//To handle situations when markers in undefined
+          setTimeout(function () {
+          markers[i].setAnimation(null);
+          }, 700);
+      }
     }
   }
 }
@@ -125,7 +149,6 @@ deteleGoogleMarkers(){
     .then(res => res.json())
     )
   };
-
   return Promise.all(promiseArray);
 }
     componentDidMount(){
@@ -139,7 +162,6 @@ deteleGoogleMarkers(){
         .then((results) => { 
             venues = results.map((result)=>{
             let snippet = {venueName: result.response.groups[0].items[0].venue.name, locationlat: this.props.locations[i].lat};
-            i++;
             markerVenueSnippets.push(snippet);
             return markerVenueSnippets;
           });
@@ -147,16 +169,20 @@ deteleGoogleMarkers(){
             markerSnippets: markerVenueSnippets
         });
       },
-      (error) => { alert("could not get venue for location")});
+      (error) => { alert("could not load venue for location");});
     }
 
     componentDidUpdate() {
+      let mapIsRendered = false;
         if (this.state.mapIsReady) {
-            this.loadGoogleMap();
+            mapIsRendered = this.loadGoogleMap();
             this.deteleGoogleMarkers();
-            this.loadGoogleMarkers(this.props.updatedLocations);
           }
-            this.animateClickedMarker(this.props.clickedLocation);
+
+        if(mapIsRendered){
+          this.loadGoogleMarkers(this.props.updatedLocations);
+        }
+          this.animateClickedMarker(this.props.clickedLocation);
     }
     
       render() { 
@@ -168,3 +194,4 @@ deteleGoogleMarkers(){
 
 
 export default Map;
+
