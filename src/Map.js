@@ -117,8 +117,8 @@ deteleGoogleMarkers(){
   let length = this.props.locations.length;
 
   for(let i=0; i<length; i++){
-  const clientID = "SKCXIHC1WOISA02RL0XT0BLODJSHMRNT1V3UF1POVYU4XG2H";
-  const ClientSecret = "MN4PGNY515BRKKMBN0P4ESKNA40UXFY2LDXJIG0UFSJXG5E2"
+  const clientID = "insert your client ID";
+  const ClientSecret = "insert your client secret";
   
   const getLocationVenues = `https://api.foursquare.com/v2/venues/explore?client_id=${clientID}&client_secret=${ClientSecret}&v=20180323&limit=1&ll=${this.props.locations[i].lat},${this.props.locations[i].lng}`;
     promiseArray.push(fetch(getLocationVenues)
